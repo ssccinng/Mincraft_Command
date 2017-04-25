@@ -57,5 +57,10 @@ namespace Mincraft_Command
                 Geometry_Set._3line_hollow(int.Parse(x_1.Text), int.Parse(y_1.Text), int.Parse(z_1.Text), int.Parse(x_2.Text), int.Parse(y_2.Text), int.Parse(z_2.Text), int.Parse(x_3.Text), int.Parse(y_3.Text), int.Parse(z_3.Text), block_.Text);
             }
         }
+
+        private void GraLineBu_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

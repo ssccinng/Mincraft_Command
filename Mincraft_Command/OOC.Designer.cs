@@ -51,7 +51,7 @@
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.button1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.ForeColor = System.Drawing.SystemColors.Control;
-            this.button1.Location = new System.Drawing.Point(262, 378);
+            this.button1.Location = new System.Drawing.Point(262, 370);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(81, 29);
             this.button1.TabIndex = 1;
@@ -73,6 +73,7 @@
             this.ShowIcon = false;
             this.Text = "OOC";
             this.Load += new System.EventHandler(this.OOC_Load);
+            this.ResizeEnd += new System.EventHandler(this.OOC_ResizeEnd);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -36,9 +36,22 @@ namespace Mincraft_Command
         }
 
         string [] show = Mini_PCB.Code_to_Cmd.code_to_show.Code;
-        int index = 1, len = 0; 
+        int index = 1, len = 0;
+
+        private void OOC_ResizeEnd(object sender, EventArgs e)
+        {
+            textBox1.Width = Width - 25;
+            textBox1.Height = Height - 125;
+            button1.Top = Height - 90;
+            button1.Left = Width / 2 - 72;
+        }
+
         private void OOC_Load(object sender, EventArgs e)
         {
+            textBox1.Width = Width - 25;
+            textBox1.Height = Height - 125;
+            button1.Top = Height - 90;
+            button1.Left = Width / 2 - 72;
             foreach (string i in show)
             {
                 if (i != "") len++;
