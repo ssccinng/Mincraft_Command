@@ -101,5 +101,10 @@ namespace Mincraft_Command
         {
             Mini_PCB.Code_to_Cmd.send_str(Line_Draw_code(x1, y1, z1, x2, y2, z2, block).ToString());
         }
+
+        public static void GraLine_Draw(int x1, int y1, int z1, int x2, int y2, int z2, string block)
+        {
+
+        }
     }
 }

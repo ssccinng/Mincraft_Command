@@ -43,7 +43,7 @@ namespace Mincraft_Command
             textBox1.Width = Width - 25;
             textBox1.Height = Height - 125;
             button1.Top = Height - 90;
-            button1.Left = Width / 2 - 72;
+            button1.Left = Width / 2 - 65;
         }
 
         private void OOC_Load(object sender, EventArgs e)
@@ -51,7 +51,7 @@ namespace Mincraft_Command
             textBox1.Width = Width - 25;
             textBox1.Height = Height - 125;
             button1.Top = Height - 90;
-            button1.Left = Width / 2 - 72;
+            button1.Left = Width / 2 - 65;
             foreach (string i in show)
             {
                 if (i != "") len++;

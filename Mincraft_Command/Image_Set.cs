@@ -10,7 +10,50 @@ namespace Mincraft_Command
 {
     public class Image_Set
     {
-        public static void Word_Image(Bitmap color_Image, bool x, bool z, bool m1, bool m2, bool level, int center_x, int center_y, int center_z, string block)
+
+        private static string code_gene(bool x, bool z, bool level, int head, int end, int i, int center_x, int center_y, int center_z, int m1tag, int m2tag, string block, ref BitmapData data)
+        {
+            if (level)
+            {
+                if (x)
+                {
+                    return string.Format("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n",
+                        (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), 
+                        (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), 
+                        (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), 
+                        (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), block);
+                }
+                else
+                {
+                    return string.Format("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", 
+                        (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), 
+                        (-center_z), (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), 
+                        (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), 
+                        (-center_z), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
+                }
+            }
+            else
+            {
+                if (x)
+                {
+                    return string.Format("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", 
+                        (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), 
+                        (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), 
+                        (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), 
+                        (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), block);
+                }
+                else
+                {
+                    return string.Format("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n",
+                        (-center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z),
+                        (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), (-center_x),
+                        (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z),
+                        (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
+                }
+            }
+        }
+
+        public static void Word_Image(ref Bitmap color_Image, bool x, bool z, bool m1, bool m2, bool level, int center_x, int center_y, int center_z, string block)
         {
             //Bitmap color_Image;
             //try
@@ -35,165 +78,242 @@ namespace Mincraft_Command
             {
                 m2tag = data.Width;
             }
+
+            unsafe
+            {
+                byte* ptr = (byte*)(data.Scan0);
+                for (int i = 0; i < data.Height; i++)
+                {
+                    for (int j = 0; j < data.Width; j++)
+                    {
+                        // write the logic implementation here
+                        //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+                        if (ptr[0] != 255 && ptr[1] != 255 && ptr[2] != 255)//结束执行一次
+                        {
+                            end++;
+                        }
+                        else
+                        {
+                            if (end >= head)
+                            {
+                                code.Append(code_gene(x, z, level, head, end, i, center_x, center_y, center_z, m1tag, m2tag, block, ref data));
+                                //code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), block);
+                                //code += "/fill" + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x) + " ~" + (-center_z) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x) + " ~" + (-center_z) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y) + " " + block + "\n";
+                                head = end + 1;
+                            }
+                            head++;
+                            end = head - 1;
+                        }
+                        ptr += 3;
+                    }
+                    if (head <= end)
+                        code.Append(code_gene(x, z, level, head, end, i, center_x, center_y, center_z, m1tag, m2tag, block, ref data));
+                    //code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), block);
+                    head = 0;
+                    end = -1;
+                    ptr += data.Stride - data.Width * 3;
+                }
+            }
+
+            //if (level)
+            //{
+            //    if (x)
+            //    {
+            //        unsafe
+            //        {
+            //            byte* ptr = (byte*)(data.Scan0);
+            //            for (int i = 0; i < data.Height; i++)
+            //            {
+            //                for (int j = 0; j < data.Width; j++)
+            //                {
+            //                    // write the logic implementation here
+            //                    //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+            //                    if (ptr[0] != 255 && ptr[1] != 255 && ptr[2] != 255)//结束执行一次
+            //                    {
+            //                        end++;
+            //                    }
+            //                    else
+            //                    {
+            //                        if (end >= head)
+            //                        {
+            //                            code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), block);
+            //                            //code += "/fill" + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x) + " ~" + (-center_z) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x) + " ~" + (-center_z) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y) + " " + block + "\n";
+            //                            head = end + 1;
+            //                        }
+            //                        head++;
+            //                        end = head - 1;
+            //                    }
+            //                    ptr += 3;
+            //                }
+            //                if (head <= end)
+            //                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), block);
+            //                head = 0;
+            //                end = -1;
+            //                ptr += data.Stride - data.Width * 3;
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        unsafe
+            //        {
+            //            byte* ptr = (byte*)(data.Scan0);
+            //            for (int i = 0; i < data.Height; i++)
+            //            {
+            //                for (int j = 0; j < data.Width; j++)
+            //                {
+            //                    // write the logic implementation here
+            //                    //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+            //                    if (ptr[0] != 255 && ptr[1] != 255 && ptr[2] != 255)//结束执行一次
+            //                    {
+            //                        end++;
+            //                    }
+            //                    else
+            //                    {
+            //                        if (end >= head)
+            //                        {
+            //                            code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), (-center_z), (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), (-center_z), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
+            //                            //code += "/fill" + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x) + " ~" + (-center_z) + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) -center_x) + " ~" + (-center_z) + " ~" +(end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y) + " " + block + "\n";
+            //                            head = end + 1;
+            //                        }
+            //                        head++;
+            //                        end = head - 1;
+            //                    }
+            //                    ptr += 3;
+            //                }
+            //                if (head <= end)
+            //                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), (-center_z), (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), (-center_z), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
+            //                //code += "/fill" + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x) + " ~" + (-center_z) + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x) + " ~" + (-center_z) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y) + " " + block + "\n";
+            //                head = 0;
+            //                end = -1;
+            //                ptr += data.Stride - data.Width * 3;
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    if (x)
+            //    {
+            //        unsafe
+            //        {
+            //            byte* ptr = (byte*)(data.Scan0);
+            //            for (int i = 0; i < data.Height; i++)
+            //            {
+            //                for (int j = 0; j < data.Width; j++)
+            //                {
+            //                    // write the logic implementation here
+            //                    //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+            //                    if (ptr[0] != 255 && ptr[1] != 255 && ptr[2] != 255)//结束执行一次
+            //                    {
+            //                        end++;
+            //                    }
+            //                    else
+            //                    {
+            //                        if (end >= head)
+            //                        {
+            //                            code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), block);
+            //                            //code += "/fill" + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (-center_y) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (-center_y) + " " + block + "\n";
+            //                            head = end + 1;
+            //                        }
+            //                        head++;
+            //                        end = head - 1;
+            //                    }
+            //                    ptr += 3;
+            //                }
+            //                if (head <= end)
+            //                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), block);
+            //                //code += "/fill" + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (-center_y) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (-center_y) + " " + block + "\n";
+            //                head = 0;
+            //                end = -1;
+            //                ptr += data.Stride - data.Width * 3;
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        unsafe
+            //        {
+            //            byte* ptr = (byte*)(data.Scan0);
+            //            for (int i = 0; i < data.Height; i++)
+            //            {
+            //                for (int j = 0; j < data.Width; j++)
+            //                {
+            //                    // write the logic implementation here
+            //                    //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+            //                    if (ptr[0] != 255 && ptr[1] != 255 && ptr[2] != 255)//结束执行一次
+            //                    {
+            //                        end++;
+            //                    }
+            //                    else
+            //                    {
+            //                        if (end >= head)
+            //                        {
+            //                            code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (-center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), (-center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
+            //                            //code += "/fill" + " ~" + (-center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y) + " ~" + (-center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) -center_y) + " " + block + "\n";
+            //                            head = end + 1;
+            //                        }
+            //                        head++;
+            //                        end = head - 1;
+            //                    }
+            //                    ptr += 3;
+            //                }
+            //                if (head <= end)
+            //                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (-center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), (-center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
+            //                //code += "/fill" + " ~" + (-center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y) + " ~" + (-center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y) + " " + block + "\n";
+            //                head = 0;
+            //                end = -1;
+            //                ptr += data.Stride - data.Width * 3;
+            //            }
+            //        }
+            //    }
+            //}
+            Mini_PCB.Code_to_Cmd.send_str(code.ToString());
+        }
+
+        private static string code_gene(bool x, bool z, bool level, int head, int end, int i, int center_x, int center_y, int center_z, int m1tag, int m2tag, int blockId, ref string[,] files, ref BitmapData data)
+        {
             if (level)
             {
                 if (x)
                 {
-                    unsafe
-                    {
-                        byte* ptr = (byte*)(data.Scan0);
-                        for (int i = 0; i < data.Height; i++)
-                        {
-                            for (int j = 0; j < data.Width; j++)
-                            {
-                                // write the logic implementation here
-                                //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
-                                if (ptr[0] != 255 && ptr[1] != 255 && ptr[2] != 255)//结束执行一次
-                                {
-                                    end++;
-                                }
-                                else
-                                {
-                                    if (end >= head)
-                                    {
-                                        code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), block);
-                                        //code += "/fill" + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x) + " ~" + (-center_z) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x) + " ~" + (-center_z) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y) + " " + block + "\n";
-                                        head = end + 1;
-                                    }
-                                    head++;
-                                    end = head - 1;
-                                }
-                                ptr += 3;
-                            }
-                            if (head <= end)
-                                code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (-center_z), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_y), block);
-                            head = 0;
-                            end = -1;
-                            ptr += data.Stride - data.Width * 3;
-                        }
-                    }
+                    return string.Format("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", 
+                        ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), 
+                        ((m2tag == 0 ? head : (m2tag - head)) - center_y), 
+                        ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), 
+                        ((m2tag == 0 ? end : (m2tag - end)) - center_y), files[blockId, 0]);
                 }
                 else
                 {
-                    unsafe
-                    {
-                        byte* ptr = (byte*)(data.Scan0);
-                        for (int i = 0; i < data.Height; i++)
-                        {
-                            for (int j = 0; j < data.Width; j++)
-                            {
-                                // write the logic implementation here
-                                //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
-                                if (ptr[0] != 255 && ptr[1] != 255 && ptr[2] != 255)//结束执行一次
-                                {
-                                    end++;
-                                }
-                                else
-                                {
-                                    if (end >= head)
-                                    {
-                                        code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), (-center_z), (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), (-center_z), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
-                                        //code += "/fill" + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x) + " ~" + (-center_z) + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) -center_x) + " ~" + (-center_z) + " ~" +(end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y) + " " + block + "\n";
-                                        head = end + 1;
-                                    }
-                                    head++;
-                                    end = head - 1;
-                                }
-                                ptr += 3;
-                            }
-                            if (head <= end)
-                                code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), (-center_z), (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x), (-center_z), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
-                            //code += "/fill" + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x) + " ~" + (-center_z) + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_x) + " ~" + (-center_z) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y) + " " + block + "\n";
-                            head = 0;
-                            end = -1;
-                            ptr += data.Stride - data.Width * 3;
-                        }
-                    }
+                    return string.Format("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", 
+                        ((m2tag == 0 ? head : (m2tag - head)) - center_x), (-center_z), 
+                        ((m1tag == 0 ? i : (data.Height - i)) - center_y), 
+                        ((m2tag == 0 ? end : (m2tag - end)) - center_x), (-center_z), 
+                        ((m1tag == 0 ? i : (data.Height - i)) - center_y), files[blockId, 0]);
                 }
             }
             else
             {
                 if (x)
                 {
-                    unsafe
-                    {
-                        byte* ptr = (byte*)(data.Scan0);
-                        for (int i = 0; i < data.Height; i++)
-                        {
-                            for (int j = 0; j < data.Width; j++)
-                            {
-                                // write the logic implementation here
-                                //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
-                                if (ptr[0] != 255 && ptr[1] != 255 && ptr[2] != 255)//结束执行一次
-                                {
-                                    end++;
-                                }
-                                else
-                                {
-                                    if (end >= head)
-                                    {
-                                        code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), block);
-                                        //code += "/fill" + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (-center_y) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (-center_y) + " " + block + "\n";
-                                        head = end + 1;
-                                    }
-                                    head++;
-                                    end = head - 1;
-                                }
-                                ptr += 3;
-                            }
-                            if (head <= end)
-                                code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (-center_y), block);
-                            //code += "/fill" + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (-center_y) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (-center_y) + " " + block + "\n";
-                            head = 0;
-                            end = -1;
-                            ptr += data.Stride - data.Width * 3;
-                        }
-                    }
+                    return string.Format("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", 
+                        (-center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), 
+                        ((m2tag == 0 ? head : (m2tag - head)) - center_y), (-center_x), 
+                        ((m1tag == 0 ? i : (data.Height - i)) - center_z), 
+                        ((m2tag == 0 ? end : (m2tag - end)) - center_y), files[blockId, 0]);
                 }
                 else
                 {
-                    unsafe
-                    {
-                        byte* ptr = (byte*)(data.Scan0);
-                        for (int i = 0; i < data.Height; i++)
-                        {
-                            for (int j = 0; j < data.Width; j++)
-                            {
-                                // write the logic implementation here
-                                //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
-                                if (ptr[0] != 255 && ptr[1] != 255 && ptr[2] != 255)//结束执行一次
-                                {
-                                    end++;
-                                }
-                                else
-                                {
-                                    if (end >= head)
-                                    {
-                                        code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (-center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), (-center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
-                                        //code += "/fill" + " ~" + (-center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y) + " ~" + (-center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) -center_y) + " " + block + "\n";
-                                        head = end + 1;
-                                    }
-                                    head++;
-                                    end = head - 1;
-                                }
-                                ptr += 3;
-                            }
-                            if (head <= end)
-                                code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (-center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y), (-center_x), (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z), (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y), block);
-                            //code += "/fill" + " ~" + (-center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (head + m2tag - (m2tag != 0 ? (2 * head) : 0) - center_y) + " ~" + (-center_x) + " ~" + (i + m1tag - (m1tag != 0 ? (2 * i) : 0) - center_z) + " ~" + (end + m2tag - (m2tag != 0 ? (2 * end) : 0) - center_y) + " " + block + "\n";
-                            head = 0;
-                            end = -1;
-                            ptr += data.Stride - data.Width * 3;
-                        }
-                    }
+                    return string.Format("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", 
+                        ((m2tag == 0 ? head : (m2tag - head)) - center_x), 
+                        ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), 
+                        ((m2tag == 0 ? end : (m2tag - end)) - center_x), 
+                        ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), files[blockId, 0]);
                 }
             }
-            Mini_PCB.Code_to_Cmd.send_str(code.ToString());
         }
 
-
-
-        public static void Colorful_Image(Bitmap color_Image, bool x, bool z, bool m1, bool m2, bool level, int center_x, int center_y, int center_z)
+        public static void Colorful_Image(ref Bitmap color_Image, bool x, bool z, bool m1, bool m2, bool level, int center_x, int center_y, int center_z)
         {
             string[,] files = Colorful_Image_sour();
             //Bitmap color_Image;
@@ -218,174 +338,213 @@ namespace Mincraft_Command
             {
                 m2tag = data.Width;
             }
-            string block = "", block1 = "";
-            if (level)
+            int block = 0, block1 = 0;
+
+            unsafe
             {
-                if (x)
+                //int head = 0, end = 0;
+                byte* ptr = (byte*)(data.Scan0);
+                for (int i = 0; i < data.Height; i++)
                 {
-                    unsafe
+                    block1 = FindBlock(ptr[0], ptr[1], ptr[2], ref files);
+                    for (int j = 0; j < data.Width; j++)
                     {
-                        //int head = 0, end = 0;
-                        byte* ptr = (byte*)(data.Scan0);
-                        for (int i = 0; i < data.Height; i++)
+                        block = FindBlock(ptr[0], ptr[1], ptr[2], ref files);
+                        // write the logic implementation here
+                        //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+                        if (block == block1)
                         {
-                            block1 = FindBlock(ptr[0], ptr[1], ptr[2], files);
-                            for (int j = 0; j < data.Width; j++)
-                            {
-                                block = FindBlock(ptr[0], ptr[1], ptr[2], files);
-                                // write the logic implementation here
-                                //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
-                                if (block == block1)
-                                {
-                                    end++;
-                                }
-                                else
-                                {
-                                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), block1);
-                                    //code += "/fill" + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_x) + " ~" + (-center_z) + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_y) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_x) + " ~" + (-center_z) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_y) + " " + block1 + "\n";
-                                    head = end + 1;
-                                    end = head;
-                                    block1 = block;
-                                }
-                                ptr += 3;
-                            }
-                            if (head <= end)
-                            {
-                                code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), block1);
-                            }
-                            head = 0;
-                            end = 0;
-                            ptr += data.Stride - data.Width * 3;
+                            end++;
                         }
+                        else
+                        {
+                            code.Append(code_gene(x, z, level, head, end, i, center_x, center_y, center_z, m1tag, m2tag, block1, ref files, ref data));
+                            //code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), files[block1, 0]);
+                            //code += "/fill" + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_x) + " ~" + (-center_z) + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_y) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_x) + " ~" + (-center_z) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_y) + " " + block1 + "\n";
+                            head = end + 1;
+                            end = head;
+                            block1 = block;
+                        }
+                        ptr += 3;
                     }
-                }
-                else
-                {
-                    unsafe
+                    if (head <= end)
                     {
-                        //int head = 0, end = 0;
-                        byte* ptr = (byte*)(data.Scan0);
-                        for (int i = 0; i < data.Height; i++)
-                        {
-                            block1 = FindBlock(ptr[0], ptr[1], ptr[2], files);
-                            for (int j = 0; j < data.Width; j++)
-                            {
-                                block = FindBlock(ptr[0], ptr[1], ptr[2], files);
-                                // write the logic implementation here
-                                //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
-                                if (block == block1)
-                                {
-                                    end++;
-                                }
-                                else
-                                {
-                                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m2tag == 0 ? head : (m2tag - head)) - center_x), (-center_z), ((m1tag == 0 ? i : (data.Height - i)) - center_y), ((m2tag == 0 ? end : (m2tag - end)) - center_x), (-center_z), ((m1tag == 0 ? i : (data.Height - i)) - center_y), block1);
-                                    //code += "/fill" + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_x) + " ~" + (-center_z) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_y) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_x) + " ~" + (-center_z) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_y) + " " + block1 + "\n";
-                                    head = end + 1;
-                                    end = head;
-                                    block1 = block;
-                                }
-                                ptr += 3;
-                            }
-                            if (head <= end)
-                            {
-                                code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m2tag == 0 ? head : (m2tag - head)) - center_x), (-center_z), ((m1tag == 0 ? i : (data.Height - i)) - center_y), ((m2tag == 0 ? end : (m2tag - end)) - center_x), (-center_z), ((m1tag == 0 ? i : (data.Height - i)) - center_y), block1);
-                                //code += "/fill" + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_x) + " ~" + (-center_z) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_y) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_x) + " ~" + (-center_z) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_y) + " " + block1 + "\n";
-                            }
-                            head = 0;
-                            end = 0;
-                            ptr += data.Stride - data.Width * 3;
-                        }
+                        code.Append(code_gene(x, z, level, head, end, i, center_x, center_y, center_z, m1tag, m2tag, block1, ref files, ref data));
+                        //code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), files[block1, 0]);
                     }
+                    head = 0;
+                    end = 0;
+                    ptr += data.Stride - data.Width * 3;
                 }
             }
-            else
-            {
-                if (x)
-                {
-                    unsafe
-                    {
-                        //int head = 0, end = 0;
-                        byte* ptr = (byte*)(data.Scan0);
-                        for (int i = 0; i < data.Height; i++)
-                        {
-                            block1 = FindBlock(ptr[0], ptr[1], ptr[2], files);
-                            for (int j = 0; j < data.Width; j++)
-                            {
-                                block = FindBlock(ptr[0], ptr[1], ptr[2], files);
-                                // write the logic implementation here
-                                //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
-                                if (block == block1)
-                                {
-                                    end++;
-                                }
-                                else
-                                {
-                                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (-center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), (-center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), block1);
-                                    //code += "/fill" + " ~" + (-center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_y) + " ~" + (-center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_y) + " " + block1 + "\n";
-                                    head = end + 1;
-                                    end = head;
-                                    block1 = block;
-                                }
-                                ptr += 3;
-                            }
-                            if (head <= end)
-                            {
-                                code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (-center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), (-center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), block1);
-                                //code += "/fill" + " ~" + (-center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_y) + " ~" + (-center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_y) + " " + block1 + "\n";
-                            }
-                            head = 0;
-                            end = 0;
-                            ptr += data.Stride - data.Width * 3;
-                        }
-                    }
-                }
-                else
-                {
-                    unsafe
-                    {
-                        //int head = 0, end = 0;
-                        byte* ptr = (byte*)(data.Scan0);
-                        for (int i = 0; i < data.Height; i++)
-                        {
-                            block1 = FindBlock(ptr[0], ptr[1], ptr[2], files);
-                            for (int j = 0; j < data.Width; j++)
-                            {
-                                block = FindBlock(ptr[0], ptr[1], ptr[2], files);
-                                // write the logic implementation here
-                                //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
-                                if (block == block1)
-                                {
-                                    end++;
-                                }
-                                else
-                                {
-                                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m2tag == 0 ? head : (m2tag - head)) - center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), ((m2tag == 0 ? end : (m2tag - end)) - center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), block1);
-                                    //code += "/fill" + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + (-center_y) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + (-center_y) + " " + block1 + "\n";
-                                    head = end + 1;
-                                    end = head;
-                                    block1 = block;
-                                }
-                                ptr += 3;
-                            }
-                            if (head <= end)
-                            {
-                                code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m2tag == 0 ? head : (m2tag - head)) - center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), ((m2tag == 0 ? end : (m2tag - end)) - center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), block1);
-                                //code += "/fill" + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + (-center_y) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + (-center_y) + " " + block1 + "\n";
-                            }
-                            head = 0;
-                            end = 0;
-                            ptr += data.Stride - data.Width * 3;
-                        }
-                    }
-                }
-            }
+
+            //if (level)
+            //{
+            //    if (x)
+            //    {
+            //        unsafe
+            //        {
+            //            //int head = 0, end = 0;
+            //            byte* ptr = (byte*)(data.Scan0);
+            //            for (int i = 0; i < data.Height; i++)
+            //            {
+            //                block1 = FindBlock(ptr[0], ptr[1], ptr[2], ref files);
+            //                for (int j = 0; j < data.Width; j++)
+            //                {
+            //                    block = FindBlock(ptr[0], ptr[1], ptr[2], ref files);
+            //                    // write the logic implementation here
+            //                    //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+            //                    if (block == block1)
+            //                    {
+            //                        end++;
+            //                    }
+            //                    else
+            //                    {
+            //                        code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), files[block1, 0]);
+            //                        //code += "/fill" + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_x) + " ~" + (-center_z) + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_y) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_x) + " ~" + (-center_z) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_y) + " " + block1 + "\n";
+            //                        head = end + 1;
+            //                        end = head;
+            //                        block1 = block;
+            //                    }
+            //                    ptr += 3;
+            //                }
+            //                if (head <= end)
+            //                {
+            //                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), ((m1tag == 0 ? i : (data.Height - i)) - center_x), (-center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), files[block1, 0]);
+            //                }
+            //                head = 0;
+            //                end = 0;
+            //                ptr += data.Stride - data.Width * 3;
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        unsafe
+            //        {
+            //            //int head = 0, end = 0;
+            //            byte* ptr = (byte*)(data.Scan0);
+            //            for (int i = 0; i < data.Height; i++)
+            //            {
+            //                block1 = FindBlock(ptr[0], ptr[1], ptr[2], files);
+            //                for (int j = 0; j < data.Width; j++)
+            //                {
+            //                    block = FindBlock(ptr[0], ptr[1], ptr[2], files);
+            //                    // write the logic implementation here
+            //                    //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+            //                    if (block == block1)
+            //                    {
+            //                        end++;
+            //                    }
+            //                    else
+            //                    {
+            //                        code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m2tag == 0 ? head : (m2tag - head)) - center_x), (-center_z), ((m1tag == 0 ? i : (data.Height - i)) - center_y), ((m2tag == 0 ? end : (m2tag - end)) - center_x), (-center_z), ((m1tag == 0 ? i : (data.Height - i)) - center_y), block1);
+            //                        //code += "/fill" + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_x) + " ~" + (-center_z) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_y) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_x) + " ~" + (-center_z) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_y) + " " + block1 + "\n";
+            //                        head = end + 1;
+            //                        end = head;
+            //                        block1 = block;
+            //                    }
+            //                    ptr += 3;
+            //                }
+            //                if (head <= end)
+            //                {
+            //                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m2tag == 0 ? head : (m2tag - head)) - center_x), (-center_z), ((m1tag == 0 ? i : (data.Height - i)) - center_y), ((m2tag == 0 ? end : (m2tag - end)) - center_x), (-center_z), ((m1tag == 0 ? i : (data.Height - i)) - center_y), block1);
+            //                    //code += "/fill" + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_x) + " ~" + (-center_z) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_y) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_x) + " ~" + (-center_z) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_y) + " " + block1 + "\n";
+            //                }
+            //                head = 0;
+            //                end = 0;
+            //                ptr += data.Stride - data.Width * 3;
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    if (x)
+            //    {
+            //        unsafe
+            //        {
+            //            //int head = 0, end = 0;
+            //            byte* ptr = (byte*)(data.Scan0);
+            //            for (int i = 0; i < data.Height; i++)
+            //            {
+            //                block1 = FindBlock(ptr[0], ptr[1], ptr[2], files);
+            //                for (int j = 0; j < data.Width; j++)
+            //                {
+            //                    block = FindBlock(ptr[0], ptr[1], ptr[2], files);
+            //                    // write the logic implementation here
+            //                    //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+            //                    if (block == block1)
+            //                    {
+            //                        end++;
+            //                    }
+            //                    else
+            //                    {
+            //                        code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (-center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), (-center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), block1);
+            //                        //code += "/fill" + " ~" + (-center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_y) + " ~" + (-center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_y) + " " + block1 + "\n";
+            //                        head = end + 1;
+            //                        end = head;
+            //                        block1 = block;
+            //                    }
+            //                    ptr += 3;
+            //                }
+            //                if (head <= end)
+            //                {
+            //                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", (-center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), ((m2tag == 0 ? head : (m2tag - head)) - center_y), (-center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), ((m2tag == 0 ? end : (m2tag - end)) - center_y), block1);
+            //                    //code += "/fill" + " ~" + (-center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_y) + " ~" + (-center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_y) + " " + block1 + "\n";
+            //                }
+            //                head = 0;
+            //                end = 0;
+            //                ptr += data.Stride - data.Width * 3;
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        unsafe
+            //        {
+            //            //int head = 0, end = 0;
+            //            byte* ptr = (byte*)(data.Scan0);
+            //            for (int i = 0; i < data.Height; i++)
+            //            {
+            //                block1 = FindBlock(ptr[0], ptr[1], ptr[2], files);
+            //                for (int j = 0; j < data.Width; j++)
+            //                {
+            //                    block = FindBlock(ptr[0], ptr[1], ptr[2], files);
+            //                    // write the logic implementation here
+            //                    //cc += ptr[0] + " " + ptr[1] + " " + ptr[2] + "\n";
+            //                    if (block == block1)
+            //                    {
+            //                        end++;
+            //                    }
+            //                    else
+            //                    {
+            //                        code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m2tag == 0 ? head : (m2tag - head)) - center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), ((m2tag == 0 ? end : (m2tag - end)) - center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), block1);
+            //                        //code += "/fill" + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + (-center_y) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + (-center_y) + " " + block1 + "\n";
+            //                        head = end + 1;
+            //                        end = head;
+            //                        block1 = block;
+            //                    }
+            //                    ptr += 3;
+            //                }
+            //                if (head <= end)
+            //                {
+            //                    code.AppendFormat("/fill ~{0} ~{1} ~{2} ~{3} ~{4} ~{5} {6}\n", ((m2tag == 0 ? head : (m2tag - head)) - center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), ((m2tag == 0 ? end : (m2tag - end)) - center_x), ((m1tag == 0 ? i : (data.Height - i)) - center_z), (-center_y), block1);
+            //                    //code += "/fill" + " ~" + ((m2tag == 0 ? head : (m2tag - head)) - center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + (-center_y) + " ~" + ((m2tag == 0 ? end : (m2tag - end)) - center_x) + " ~" + ((m1tag == 0 ? i : (data.Height - i)) - center_z) + " ~" + (-center_y) + " " + block1 + "\n";
+            //                }
+            //                head = 0;
+            //                end = 0;
+            //                ptr += data.Stride - data.Width * 3;
+            //            }
+            //        }
+            //    }
+            //}
             Mini_PCB.Code_to_Cmd.send_str(code.ToString());
         }
 
         //private static string [,,] block_color = new string[256, 256, 256];
 
-        static string FindBlock(int x, int y, int z, string[,] files)
+        static int FindBlock(int x, int y, int z, ref string[,] files)
         {
             //if (block_color[x, y, z] != null) return block_color[x, y, z];
             int min = 1000000000;
@@ -399,7 +558,8 @@ namespace Mincraft_Command
                     min_i = i;
                 }
             }
-            return files[min_i, 0];
+            return min_i;
+            //return files[min_i, 0];
         }
 
         static int diss(int x1, int y1, int z1, int x2, int y2, int z2)

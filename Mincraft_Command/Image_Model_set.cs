@@ -28,9 +28,9 @@ namespace Mincraft_Command
             {
                 //cmd_gene.Model_Set.Colorful_Image(Model_Set.app.Image_Path, Draw_x.Checked, Draw_z.Checked, Draw_mode1.Checked, Draw_mode2.Checked, level.Checked, int.Parse(center_y.Text), int.Parse(center_x.Text), int.Parse(center_z.Text) + 2);
                 if (Mincraft_Command.Pixel_Art.mor.type == 0)
-                    Mincraft_Command.Image_Set.Word_Image(color_Image, Draw_x.Checked, Draw_z.Checked, Draw_mode1.Checked, Draw_mode2.Checked, level.Checked, int.Parse(Center_x.Text), int.Parse(Center_y.Text), int.Parse(Center_z.Text) + 2, Pixel_Art.mor.Word_Block);
+                    Mincraft_Command.Image_Set.Word_Image(ref color_Image, Draw_x.Checked, Draw_z.Checked, Draw_mode1.Checked, Draw_mode2.Checked, level.Checked, int.Parse(Center_x.Text), int.Parse(Center_y.Text), int.Parse(Center_z.Text) + 2, Pixel_Art.mor.Word_Block);
                 else
-                    Mincraft_Command.Image_Set.Colorful_Image(color_Image, Draw_x.Checked, Draw_z.Checked, Draw_mode1.Checked, Draw_mode2.Checked, level.Checked, int.Parse(Center_y.Text), int.Parse(Center_x.Text), int.Parse(Center_z.Text) + 2);
+                    Mincraft_Command.Image_Set.Colorful_Image(ref color_Image, Draw_x.Checked, Draw_z.Checked, Draw_mode1.Checked, Draw_mode2.Checked, level.Checked, int.Parse(Center_y.Text), int.Parse(Center_x.Text), int.Parse(Center_z.Text) + 2);
                 Dispose();
                 this.Close();
             }

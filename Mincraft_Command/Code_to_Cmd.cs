@@ -13,7 +13,7 @@ namespace Mini_PCB
         {
             public static string [] Code;
         }
-        static string[] Change_Code(string code)
+        static string[] Change_Code(ref string code)
         {
             if (code == "") return null;
             while (code[code.Length - 1] == '\n' || code[code.Length - 1] == '\r' || code[code.Length - 1] == ' ')
@@ -51,7 +51,7 @@ namespace Mini_PCB
 
         public static void send_str(string code)
         {
-            show_form(Mini_PCB.Code_to_Cmd.Change_Code(code));
+            show_form(Mini_PCB.Code_to_Cmd.Change_Code(ref code));
         }
         static void show_form(string[] code)
         {
