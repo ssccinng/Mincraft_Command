@@ -72,23 +72,23 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.GraLineBu = new System.Windows.Forms.Button();
+            this.GraLine_Block = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
+            this.GraLiney2 = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
+            this.GraLiney1 = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.GraLinez2 = new System.Windows.Forms.TextBox();
             this.GraLinex1 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.GraLinex2 = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.GraLinez1 = new System.Windows.Forms.TextBox();
-            this.GraLinex2 = new System.Windows.Forms.TextBox();
-            this.GraLinez2 = new System.Windows.Forms.TextBox();
-            this.GraLiney1 = new System.Windows.Forms.TextBox();
-            this.GraLiney2 = new System.Windows.Forms.TextBox();
-            this.GraLineBu = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.GraLine_Block = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -528,6 +528,51 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "悬链线绘制";
             // 
+            // GraLineBu
+            // 
+            this.GraLineBu.Location = new System.Drawing.Point(106, 116);
+            this.GraLineBu.Name = "GraLineBu";
+            this.GraLineBu.Size = new System.Drawing.Size(75, 23);
+            this.GraLineBu.TabIndex = 4;
+            this.GraLineBu.Text = "生成";
+            this.GraLineBu.UseVisualStyleBackColor = true;
+            this.GraLineBu.Click += new System.EventHandler(this.GraLineBu_Click);
+            // 
+            // GraLine_Block
+            // 
+            this.GraLine_Block.Location = new System.Drawing.Point(54, 78);
+            this.GraLine_Block.Name = "GraLine_Block";
+            this.GraLine_Block.Size = new System.Drawing.Size(142, 21);
+            this.GraLine_Block.TabIndex = 8;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 49);
+            this.label15.Name = "label15";
+            this.label15.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label15.Size = new System.Drawing.Size(17, 12);
+            this.label15.TabIndex = 4;
+            this.label15.Text = "X2";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(8, 121);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(29, 12);
+            this.label20.TabIndex = 4;
+            this.label20.Text = "倍率";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(7, 81);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(41, 12);
+            this.label19.TabIndex = 4;
+            this.label19.Text = "方块名";
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -547,15 +592,13 @@
             this.label12.TabIndex = 5;
             this.label12.Text = "Y1";
             // 
-            // label15
+            // GraLiney2
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(6, 49);
-            this.label15.Name = "label15";
-            this.label15.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.label15.Size = new System.Drawing.Size(17, 12);
-            this.label15.TabIndex = 4;
-            this.label15.Text = "X2";
+            this.GraLiney2.Location = new System.Drawing.Point(88, 45);
+            this.GraLiney2.Name = "GraLiney2";
+            this.GraLiney2.Size = new System.Drawing.Size(43, 21);
+            this.GraLiney2.TabIndex = 7;
+            this.GraLiney2.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
             // 
             // label16
             // 
@@ -566,6 +609,14 @@
             this.label16.TabIndex = 6;
             this.label16.Text = "Z1";
             // 
+            // GraLiney1
+            // 
+            this.GraLiney1.Location = new System.Drawing.Point(88, 26);
+            this.GraLiney1.Name = "GraLiney1";
+            this.GraLiney1.Size = new System.Drawing.Size(43, 21);
+            this.GraLiney1.TabIndex = 7;
+            this.GraLiney1.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
+            // 
             // label17
             // 
             this.label17.AutoSize = true;
@@ -575,13 +626,37 @@
             this.label17.TabIndex = 5;
             this.label17.Text = "Y2";
             // 
+            // GraLinez2
+            // 
+            this.GraLinez2.Location = new System.Drawing.Point(152, 45);
+            this.GraLinez2.Name = "GraLinez2";
+            this.GraLinez2.Size = new System.Drawing.Size(43, 21);
+            this.GraLinez2.TabIndex = 7;
+            this.GraLinez2.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
+            // 
             // GraLinex1
             // 
-            this.GraLinex1.Location = new System.Drawing.Point(24, 26);
+            this.GraLinex1.Location = new System.Drawing.Point(24, 25);
             this.GraLinex1.Name = "GraLinex1";
             this.GraLinex1.Size = new System.Drawing.Size(43, 21);
             this.GraLinex1.TabIndex = 7;
             this.GraLinex1.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(44, 116);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(43, 21);
+            this.textBox1.TabIndex = 7;
+            this.textBox1.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
+            // 
+            // GraLinex2
+            // 
+            this.GraLinex2.Location = new System.Drawing.Point(24, 45);
+            this.GraLinex2.Name = "GraLinex2";
+            this.GraLinex2.Size = new System.Drawing.Size(43, 21);
+            this.GraLinex2.TabIndex = 7;
+            this.GraLinex2.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
             // 
             // label18
             // 
@@ -599,81 +674,6 @@
             this.GraLinez1.Size = new System.Drawing.Size(43, 21);
             this.GraLinez1.TabIndex = 7;
             this.GraLinez1.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
-            // 
-            // GraLinex2
-            // 
-            this.GraLinex2.Location = new System.Drawing.Point(24, 45);
-            this.GraLinex2.Name = "GraLinex2";
-            this.GraLinex2.Size = new System.Drawing.Size(43, 21);
-            this.GraLinex2.TabIndex = 7;
-            this.GraLinex2.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
-            // 
-            // GraLinez2
-            // 
-            this.GraLinez2.Location = new System.Drawing.Point(152, 45);
-            this.GraLinez2.Name = "GraLinez2";
-            this.GraLinez2.Size = new System.Drawing.Size(43, 21);
-            this.GraLinez2.TabIndex = 7;
-            this.GraLinez2.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
-            // 
-            // GraLiney1
-            // 
-            this.GraLiney1.Location = new System.Drawing.Point(88, 26);
-            this.GraLiney1.Name = "GraLiney1";
-            this.GraLiney1.Size = new System.Drawing.Size(43, 21);
-            this.GraLiney1.TabIndex = 7;
-            this.GraLiney1.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
-            // 
-            // GraLiney2
-            // 
-            this.GraLiney2.Location = new System.Drawing.Point(88, 45);
-            this.GraLiney2.Name = "GraLiney2";
-            this.GraLiney2.Size = new System.Drawing.Size(43, 21);
-            this.GraLiney2.TabIndex = 7;
-            this.GraLiney2.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
-            // 
-            // GraLineBu
-            // 
-            this.GraLineBu.Location = new System.Drawing.Point(106, 116);
-            this.GraLineBu.Name = "GraLineBu";
-            this.GraLineBu.Size = new System.Drawing.Size(75, 23);
-            this.GraLineBu.TabIndex = 4;
-            this.GraLineBu.Text = "生成";
-            this.GraLineBu.UseVisualStyleBackColor = true;
-            this.GraLineBu.Click += new System.EventHandler(this.GraLineBu_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(44, 116);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(43, 21);
-            this.textBox1.TabIndex = 7;
-            this.textBox1.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(7, 81);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(41, 12);
-            this.label19.TabIndex = 4;
-            this.label19.Text = "方块名";
-            // 
-            // GraLine_Block
-            // 
-            this.GraLine_Block.Location = new System.Drawing.Point(54, 78);
-            this.GraLine_Block.Name = "GraLine_Block";
-            this.GraLine_Block.Size = new System.Drawing.Size(142, 21);
-            this.GraLine_Block.TabIndex = 8;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(8, 121);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(29, 12);
-            this.label20.TabIndex = 4;
-            this.label20.Text = "倍率";
             // 
             // geometry
             // 

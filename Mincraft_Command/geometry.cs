@@ -23,7 +23,8 @@ namespace Mincraft_Command
 
         private void Line_Gene_Click(object sender, EventArgs e)
         {
-            if (Check.Check_V_N(Line_X1.Text) &&
+            if (
+                Check.Check_V_N(Line_X1.Text) &&
                 Check.Check_V_N(Line_Y1.Text) &&
                 Check.Check_V_N(Line_Z1.Text) &&
                 Check.Check_V_N(Line_X2.Text) &&
@@ -64,3 +65,4 @@ namespace Mincraft_Command
         }
     }
 }
+      
