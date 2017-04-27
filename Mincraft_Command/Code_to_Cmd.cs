@@ -20,33 +20,41 @@ namespace Mini_PCB
             {
                 code = code.Remove(code.Length - 1);
             }
-            string[] cmd;
+            //StringBuilder[] cmd;
             int index = 0;
             string cmdh = "/summon falling_block ~ ~1.5 ~ {Time:1,Block:minecraft:redstone_block,Motion:[0d,-1d,0d],Passengers:[{id:falling_block,Time:1,Block:minecraft:activator_rail,Passengers:[{id:commandblock_minecart,Command:blockdata ~ ~-2 ~ {auto:0b,Command:\"\"}},\n";
             string temp = "{id:commandblock_minecart,Command:";
             string[] Code = code.Split('\n');
-            cmd = new string[code.Length / 10000 + 1];
+            //StringBuilder gg = new StringBuilder();
+            //gg.Append("");
+            StringBuilder[] cmd = new StringBuilder[code.Length / 10000 + 1];
             for (int i = 0; i < cmd.Length; ++i)
             {
-                cmd[i] = "";
+                cmd[i] = new StringBuilder();
+                cmd[i].Append("");
             }
-            cmd[0] = cmdh;
+            cmd[0].Append(cmdh);
             for (int i = 0; i < Code.Length; ++i)
             {
                 while (Code[i][Code[i].Length - 1] == '\n' || Code[i][Code[i].Length - 1] == '\r' || Code[i][Code[i].Length - 1] == ' ')
                 {
                     Code[i] = Code[i].Remove(Code[i].Length - 1);
                 }
-                cmd[index] += temp + Code[i] + "},\n";
+                cmd[index].AppendFormat("{0}{1}{2}", temp, Code[i], "},\n");
                 if (cmd[index].Length > 30000)
                 {
-                    cmd[index] += "{id:commandblock_minecart,Command:setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:fill ~ ~ ~ ~ ~-2 ~ air}},{id:commandblock_minecart,Command:kill @e[type=commandblock_minecart,r=1]}]}]}";
+                    cmd[index].Append("{id:commandblock_minecart,Command:setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:fill ~ ~ ~ ~ ~-2 ~ air}},{id:commandblock_minecart,Command:kill @e[type=commandblock_minecart,r=1]}]}]}");
                     index++;
-                    cmd[index] = cmdh;
+                    cmd[index].Append(cmdh);
                 }
             }
-            cmd[index] += "{id:commandblock_minecart,Command:setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:fill ~ ~ ~ ~ ~-2 ~ air}},{id:commandblock_minecart,Command:kill @e[type=commandblock_minecart,r=1]}]}]}";
-            return cmd;
+            cmd[index].Append("{id:commandblock_minecart,Command:setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:fill ~ ~ ~ ~ ~-2 ~ air}},{id:commandblock_minecart,Command:kill @e[type=commandblock_minecart,r=1]}]}]}");
+            string[] re = new string[cmd.Length];
+            int strptr = 0;
+            foreach (StringBuilder cmds in cmd) {
+                re[strptr++] = cmds.ToString();
+            }
+            return re;
         }
 
         public static void send_str(string code)

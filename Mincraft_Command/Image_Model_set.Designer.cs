@@ -230,6 +230,7 @@
             this.Center_x.Name = "Center_x";
             this.Center_x.Size = new System.Drawing.Size(100, 21);
             this.Center_x.TabIndex = 0;
+            this.Center_x.TextChanged += new System.EventHandler(this.Center_x_TextChanged);
             // 
             // button1
             // 

@@ -44,6 +44,9 @@ namespace Mincraft_Command
                 color_Image = new Bitmap(Pixel_Art.mor.Word_Path);
                 Width1.Text = "宽=" + color_Image.Width.ToString();
                 Height1.Text = "长=" + color_Image.Height.ToString();
+                Center_x.Text = (color_Image.Width / 2).ToString();
+                Center_y.Text = (color_Image.Height / 2).ToString();
+                Center_z.Text = "5";
             }
             catch
             {
@@ -55,6 +58,11 @@ namespace Mincraft_Command
         private void Image_Model_set_FormClosing(object sender, FormClosingEventArgs e)
         {
             Dispose();
+        }
+
+        private void Center_x_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

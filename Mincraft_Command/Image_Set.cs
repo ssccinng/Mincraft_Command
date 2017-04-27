@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -10,6 +11,8 @@ namespace Mincraft_Command
 {
     public class Image_Set
     {
+        Hashtable ChunkMark = new Hashtable();
+        int tags = 0;
 
         private static string code_gene(bool x, bool z, bool level, int head, int end, int i, int center_x, int center_y, int center_z, int m1tag, int m2tag, string block, ref BitmapData data)
         {
