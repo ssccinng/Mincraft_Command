@@ -102,9 +102,139 @@ namespace Mincraft_Command
             Mini_PCB.Code_to_Cmd.send_str(Line_Draw_code(x1, y1, z1, x2, y2, z2, block).ToString());
         }
 
-        public static void GraLine_Draw(int x1, int y1, int z1, int x2, int y2, int z2, string block)
+        private static double Dist(int x1, int y1, int z1, int x2, int y2, int z2)
         {
-
+            return Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2));
         }
+
+        private static double UValue(double s, int l)
+        {
+            return 6 * (s - l) / l;
+        }
+
+        private static double RightValue(double s, int l,int h)
+        {
+            return Math.Sqrt(s * s - h * h) / l;
+        }
+
+        private static double AValue(double s, int l, int h)
+        {
+            return l / (Math.Pow(((-1 / 6 + Math.Sqrt(1 / 36 - (1 - RightValue(s, l, h)) / 30)) * 60), 2));
+        }
+
+        static StringBuilder GraLine_Draw_code(int x1, int y1, int z1, int x2, int y2, int z2, double s, string block)
+        {
+            s *= Dist(x1, y1, z1, x2, y2, z2);
+            s /= 2;
+            int l = Math.Abs(x1 - x2) / 2;
+            int hitpoint = (x2 + x1) / 2;
+            double a = aValue(UValue(s, l), l);
+            double C = y1 - (a * Math.Cosh((x1 - hitpoint) / a));
+            StringBuilder code = new StringBuilder();
+            int start = Min(x1, x2), end = x1 + x2 - start;
+            for (int i = start; i <= end; ++i)
+            {
+                code.AppendFormat("/setblock {0} {1} {2} {3}\n", i, (int)(a * Math.Cosh((i - hitpoint) / a) + C), z1, block);
+            }
+            return code;
+        }
+
+        private static double aValue(double u, int l)
+        {
+            return l / Math.Sqrt((((((2.0 / 525) * u) - (1.0 / 20)) * u) + 1) * u);
+        }
+
+        public static void GraLine_Draw(int x1, int y1, int z1, int x2, int y2, int z2, double s, string block)
+        {
+            Mini_PCB.Code_to_Cmd.send_str(GraLine_Draw_code(x1, y1, z1, x2, y2, z2, s, block).ToString());
+        }
+
+        public static void circle_Draw(int x, int y, int z, int a, int b, string model1, string model2, string block)
+        {
+            StringBuilder code = new StringBuilder();
+            int r2 = a * a;
+            int normal = b;
+            if (model1 == "XOZ")
+            {
+                if (model2 == "fill")
+                {
+                    for (int i = 0; i <= a; ++i)
+                    {
+                        int sb = (int)(Math.Sqrt(r2 - i * i) * b / a);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x + i, y, z + sb, x + i, y, z - sb, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x - i, y, z + sb, x - i, y, z - sb, block);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i <= a; ++i)
+                    {
+                        int sb = (int)(Math.Sqrt(r2 - i * i) * b / a);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x + i, y, z + normal, x + i, y, z + sb, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x - i, y, z - normal, x - i, y, z - sb, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x + i, y, z - normal, x + i, y, z - sb, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x - i, y, z + normal, x - i, y, z + sb, block);
+                        normal = sb;
+                    }
+                }
+            }
+            else if (model1 == "XOY")
+            {
+                if (model2 == "fill")
+                {
+                    for (int i = 0; i <= a; ++i)
+                    {
+                        int sb = (int)(Math.Sqrt(r2 - i * i) * b / a);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x + i, y + sb, z, x + i, y - sb, z, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x - i, y + sb, z, x - i, y - sb, z, block);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i <= a; ++i)
+                    {
+                        int sb = (int)(Math.Sqrt(r2 - i * i) * b / a);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x + i, y + normal, z, x + i, y + sb, z, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x - i, y - normal, z, x - i, y - sb, z, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x + i, y - normal, z, x + i, y - sb, z, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x - i, y + normal, z, x - i, y + sb, z, block);
+                        normal = sb;
+                    }
+                }
+            }
+            else
+            {
+                if (model2 == "fill")
+                {
+                    for (int i = 0; i <= a; ++i)
+                    {
+                        int sb = (int)(Math.Sqrt(r2 - i * i) * b / a);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x, y + sb, z + i, x, y - sb, z + i, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x, y + sb, z - i, x, y - sb, z - i, block);
+                    }
+                    
+                }
+                else
+                {
+                    for (int i = 0; i <= a; ++i)
+                    {
+                        int sb = (int)(Math.Sqrt(r2 - i * i) * b / a);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x, y + normal, z + i, x, y + sb, z + i, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x, y - normal, z - i, x, y - sb, z - i, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x, y - normal, z + i, x, y - sb, z + i, block);
+                        code.AppendFormat("/fill {0} {1} {2} {3} {4} {5} {6}\n", x, y + normal, z - i, x, y + sb, z - i, block);
+                        normal = sb;
+                    }
+
+                }
+            }
+            Mini_PCB.Code_to_Cmd.send_str(code.ToString());
+        }
+
+        //private string circle_code_fill(int x, int y, int z, string blcok)
+        //{
+
+        //    return string.Format("fill {} {}")
+        //}
     }
 }

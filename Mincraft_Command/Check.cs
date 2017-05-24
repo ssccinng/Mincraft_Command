@@ -11,7 +11,12 @@ namespace Mincraft_Command
         public static bool Check_V_N(string a)
         {
             return Check_Void(a) && Check_is_Number(a);
-        } 
+        }
+
+        public static bool Check_V_DN(string a)
+        {
+            return Check_Void(a) && Check_is_doubleNumber(a);
+        }
 
         public static bool Check_Void(string a)
         {
@@ -27,6 +32,16 @@ namespace Mincraft_Command
         {
             int result = 0;
             if (!int.TryParse(a, out result))
+            {
+                MessageBox.Show("有些字段只能以数字组成!");
+                return false;
+            }
+            return true;
+        }
+        public static bool Check_is_doubleNumber(string a)
+        {
+            double result = 0;
+            if (!double.TryParse(a, out result))
             {
                 MessageBox.Show("有些字段只能以数字组成!");
                 return false;

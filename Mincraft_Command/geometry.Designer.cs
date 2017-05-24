@@ -70,6 +70,22 @@
             this.z_1 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.circlemodel2 = new System.Windows.Forms.ComboBox();
+            this.circlemodel1 = new System.Windows.Forms.ComboBox();
+            this.circle_gene = new System.Windows.Forms.Button();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.circle_block = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.circle_a = new System.Windows.Forms.TextBox();
+            this.circle_x = new System.Windows.Forms.TextBox();
+            this.circle_b = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.circle_y = new System.Windows.Forms.TextBox();
+            this.circle_z = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.GraLineBu = new System.Windows.Forms.Button();
@@ -85,12 +101,13 @@
             this.label17 = new System.Windows.Forms.Label();
             this.GraLinez2 = new System.Windows.Forms.TextBox();
             this.GraLinex1 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.GraLineS = new System.Windows.Forms.TextBox();
             this.GraLinex2 = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.GraLinez1 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -218,6 +235,7 @@
             this.Line_Z1_.Size = new System.Drawing.Size(17, 12);
             this.Line_Z1_.TabIndex = 6;
             this.Line_Z1_.Text = "Z1";
+            this.Line_Z1_.Click += new System.EventHandler(this.Line_Z1__Click);
             // 
             // label1
             // 
@@ -237,6 +255,7 @@
             this.Line_Y1_.Size = new System.Drawing.Size(17, 12);
             this.Line_Y1_.TabIndex = 5;
             this.Line_Y1_.Text = "Y1";
+            this.Line_Y1_.Click += new System.EventHandler(this.Line_Y1__Click);
             // 
             // Line_X1_
             // 
@@ -247,6 +266,7 @@
             this.Line_X1_.Size = new System.Drawing.Size(17, 12);
             this.Line_X1_.TabIndex = 4;
             this.Line_X1_.Text = "X1";
+            this.Line_X1_.Click += new System.EventHandler(this.Line_X1__Click);
             // 
             // groupBox2
             // 
@@ -486,12 +506,180 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.circlemodel2);
+            this.groupBox3.Controls.Add(this.circlemodel1);
+            this.groupBox3.Controls.Add(this.circle_gene);
+            this.groupBox3.Controls.Add(this.label27);
+            this.groupBox3.Controls.Add(this.label21);
+            this.groupBox3.Controls.Add(this.circle_block);
+            this.groupBox3.Controls.Add(this.label26);
+            this.groupBox3.Controls.Add(this.label22);
+            this.groupBox3.Controls.Add(this.label24);
+            this.groupBox3.Controls.Add(this.label23);
+            this.groupBox3.Controls.Add(this.circle_a);
+            this.groupBox3.Controls.Add(this.circle_x);
+            this.groupBox3.Controls.Add(this.circle_b);
+            this.groupBox3.Controls.Add(this.label25);
+            this.groupBox3.Controls.Add(this.circle_y);
+            this.groupBox3.Controls.Add(this.circle_z);
             this.groupBox3.Location = new System.Drawing.Point(454, 12);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(200, 156);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "平面椭圆(圆)绘制";
+            // 
+            // circlemodel2
+            // 
+            this.circlemodel2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.circlemodel2.FormattingEnabled = true;
+            this.circlemodel2.Items.AddRange(new object[] {
+            "fill",
+            "hollow"});
+            this.circlemodel2.Location = new System.Drawing.Point(128, 77);
+            this.circlemodel2.Name = "circlemodel2";
+            this.circlemodel2.Size = new System.Drawing.Size(56, 20);
+            this.circlemodel2.TabIndex = 9;
+            // 
+            // circlemodel1
+            // 
+            this.circlemodel1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.circlemodel1.FormattingEnabled = true;
+            this.circlemodel1.Items.AddRange(new object[] {
+            "XOY",
+            "XOZ",
+            "YOZ"});
+            this.circlemodel1.Location = new System.Drawing.Point(53, 77);
+            this.circlemodel1.Name = "circlemodel1";
+            this.circlemodel1.Size = new System.Drawing.Size(56, 20);
+            this.circlemodel1.TabIndex = 9;
+            // 
+            // circle_gene
+            // 
+            this.circle_gene.Location = new System.Drawing.Point(56, 130);
+            this.circle_gene.Name = "circle_gene";
+            this.circle_gene.Size = new System.Drawing.Size(75, 23);
+            this.circle_gene.TabIndex = 9;
+            this.circle_gene.Text = "生成";
+            this.circle_gene.UseVisualStyleBackColor = true;
+            this.circle_gene.Click += new System.EventHandler(this.circle_gene_Click);
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(6, 54);
+            this.label27.Name = "label27";
+            this.label27.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label27.Size = new System.Drawing.Size(11, 12);
+            this.label27.TabIndex = 4;
+            this.label27.Text = "a";
+            this.label27.Click += new System.EventHandler(this.Line_X1__Click);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 32);
+            this.label21.Name = "label21";
+            this.label21.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label21.Size = new System.Drawing.Size(17, 12);
+            this.label21.TabIndex = 4;
+            this.label21.Text = "X1";
+            this.label21.Click += new System.EventHandler(this.Line_X1__Click);
+            // 
+            // circle_block
+            // 
+            this.circle_block.Location = new System.Drawing.Point(53, 103);
+            this.circle_block.Name = "circle_block";
+            this.circle_block.Size = new System.Drawing.Size(142, 21);
+            this.circle_block.TabIndex = 8;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(71, 54);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(11, 12);
+            this.label26.TabIndex = 5;
+            this.label26.Text = "b";
+            this.label26.Click += new System.EventHandler(this.Line_Y1__Click);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(71, 32);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(17, 12);
+            this.label22.TabIndex = 5;
+            this.label22.Text = "Y1";
+            this.label22.Click += new System.EventHandler(this.Line_Y1__Click);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(6, 106);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(41, 12);
+            this.label24.TabIndex = 4;
+            this.label24.Text = "方块名";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(136, 32);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(17, 12);
+            this.label23.TabIndex = 6;
+            this.label23.Text = "Z1";
+            this.label23.Click += new System.EventHandler(this.Line_Z1__Click);
+            // 
+            // circle_a
+            // 
+            this.circle_a.Location = new System.Drawing.Point(24, 50);
+            this.circle_a.Name = "circle_a";
+            this.circle_a.Size = new System.Drawing.Size(43, 21);
+            this.circle_a.TabIndex = 7;
+            this.circle_a.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
+            // 
+            // circle_x
+            // 
+            this.circle_x.Location = new System.Drawing.Point(24, 28);
+            this.circle_x.Name = "circle_x";
+            this.circle_x.Size = new System.Drawing.Size(43, 21);
+            this.circle_x.TabIndex = 7;
+            this.circle_x.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
+            // 
+            // circle_b
+            // 
+            this.circle_b.Location = new System.Drawing.Point(88, 50);
+            this.circle_b.Name = "circle_b";
+            this.circle_b.Size = new System.Drawing.Size(43, 21);
+            this.circle_b.TabIndex = 7;
+            this.circle_b.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 81);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(29, 12);
+            this.label25.TabIndex = 4;
+            this.label25.Text = "模式";
+            // 
+            // circle_y
+            // 
+            this.circle_y.Location = new System.Drawing.Point(88, 28);
+            this.circle_y.Name = "circle_y";
+            this.circle_y.Size = new System.Drawing.Size(43, 21);
+            this.circle_y.TabIndex = 7;
+            this.circle_y.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
+            // 
+            // circle_z
+            // 
+            this.circle_z.Location = new System.Drawing.Point(153, 28);
+            this.circle_z.Name = "circle_z";
+            this.circle_z.Size = new System.Drawing.Size(43, 21);
+            this.circle_z.TabIndex = 7;
+            this.circle_z.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
             // 
             // groupBox4
             // 
@@ -517,7 +705,7 @@
             this.groupBox5.Controls.Add(this.label17);
             this.groupBox5.Controls.Add(this.GraLinez2);
             this.groupBox5.Controls.Add(this.GraLinex1);
-            this.groupBox5.Controls.Add(this.textBox1);
+            this.groupBox5.Controls.Add(this.GraLineS);
             this.groupBox5.Controls.Add(this.GraLinex2);
             this.groupBox5.Controls.Add(this.label18);
             this.groupBox5.Controls.Add(this.GraLinez1);
@@ -642,13 +830,13 @@
             this.GraLinex1.TabIndex = 7;
             this.GraLinex1.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
             // 
-            // textBox1
+            // GraLineS
             // 
-            this.textBox1.Location = new System.Drawing.Point(44, 116);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(43, 21);
-            this.textBox1.TabIndex = 7;
-            this.textBox1.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
+            this.GraLineS.Location = new System.Drawing.Point(44, 116);
+            this.GraLineS.Name = "GraLineS";
+            this.GraLineS.Size = new System.Drawing.Size(43, 21);
+            this.GraLineS.TabIndex = 7;
+            this.GraLineS.TextChanged += new System.EventHandler(this.Line_X1_TextChanged);
             // 
             // GraLinex2
             // 
@@ -694,6 +882,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
@@ -761,6 +951,22 @@
         private System.Windows.Forms.TextBox GraLine_Block;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox GraLineS;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox circle_block;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox circle_x;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox circle_y;
+        private System.Windows.Forms.TextBox circle_z;
+        private System.Windows.Forms.ComboBox circlemodel2;
+        private System.Windows.Forms.ComboBox circlemodel1;
+        private System.Windows.Forms.Button circle_gene;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.TextBox circle_a;
+        private System.Windows.Forms.TextBox circle_b;
     }
 }

@@ -50,5 +50,19 @@ namespace Mincraft_Command
 
             
         }
+        mc_cmd mc_cmd1 = null;
+        private void mc_cmd_Click(object sender, EventArgs e)
+        {
+            if (mc_cmd1 == null || mc_cmd1.IsDisposed)
+            {
+                mc_cmd1 = new Mincraft_Command.mc_cmd();
+                mc_cmd1.Show();
+            }
+            else
+            {
+                mc_cmd1.Activate();
+            }
+
+        }
     }
 }

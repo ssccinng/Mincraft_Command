@@ -40,6 +40,8 @@ namespace Mincraft_Command
         {
             Block_Sourage.Auto(Line_Block);
             Block_Sourage.Auto(block_);
+            Block_Sourage.Auto(GraLine_Block);
+            Block_Sourage.Auto(circle_block);
         }
 
         private void geometry_FormClosed(object sender, FormClosedEventArgs e)
@@ -61,7 +63,48 @@ namespace Mincraft_Command
 
         private void GraLineBu_Click(object sender, EventArgs e)
         {
+            if (
+                Check.Check_V_N(GraLinex1.Text) &&
+                Check.Check_V_N(GraLinex2.Text) &&
+                Check.Check_V_N(GraLiney1.Text) &&
+                Check.Check_V_N(GraLiney2.Text) &&
+                Check.Check_V_N(GraLinez1.Text) &&
+                Check.Check_V_N(GraLinez2.Text) &&
+                Check.Check_V_DN(GraLineS.Text)
+                )
+            {
+                Geometry_Set.GraLine_Draw(int.Parse(GraLinex1.Text), int.Parse(GraLiney1.Text), int.Parse(GraLinez1.Text), int.Parse(GraLinex2.Text), int.Parse(GraLiney2.Text), int.Parse(GraLinez2.Text), double.Parse(GraLineS.Text), GraLine_Block.Text);
+            }
+                
+        }
 
+        private void Line_Z1__Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Line_Y1__Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Line_X1__Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void circle_gene_Click(object sender, EventArgs e)
+        {
+            if (
+                Check.Check_V_N(circle_x.Text) &&
+                Check.Check_V_N(circle_y.Text) &&
+                Check.Check_V_N(circle_z.Text) &&
+                Check.Check_V_N(circle_a.Text) &&
+                Check.Check_V_N(circle_b.Text) 
+                )
+            {
+                Geometry_Set.circle_Draw(int.Parse(circle_x.Text), int.Parse(circle_y.Text), int.Parse(circle_z.Text), int.Parse(circle_a.Text), int.Parse(circle_b.Text), circlemodel1.Text, circlemodel2.Text, circle_block.Text);
+            }
         }
     }
 }

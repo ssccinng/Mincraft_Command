@@ -13,6 +13,7 @@ namespace Mini_PCB
         {
             public static string [] Code;
         }
+
         static string[] Change_Code(ref string code)
         {
             if (code == "") return null;
@@ -22,16 +23,15 @@ namespace Mini_PCB
             }
             //StringBuilder[] cmd;
             int index = 0;
-            string cmdh = "/summon falling_block ~ ~1.5 ~ {Time:1,Block:minecraft:redstone_block,Motion:[0d,-1d,0d],Passengers:[{id:falling_block,Time:1,Block:minecraft:activator_rail,Passengers:[{id:commandblock_minecart,Command:blockdata ~ ~-2 ~ {auto:0b,Command:\"\"}},\n";
-            string temp = "{id:commandblock_minecart,Command:";
+            //string cmdh = "/summon falling_block ~ ~1.5 ~ {Time:1,Block:minecraft:redstone_block,Motion:[0d,-1d,0d],Passengers:[{id:falling_block,Time:1,Block:minecraft:activator_rail,Passengers:[{id:commandblock_minecart,Command:blockdata ~ ~-2 ~ {auto:0b,Command:\"\"}},\n";
+            //string temp = "{id:commandblock_minecart,Command:";
+            string cmdh = "/summon falling_block ~ ~1.5 ~ {Time:1,Block:\"minecraft:redstone_block\",Motion:[0d,-1d,0d],Passengers:[{id:\"falling_block\",Time:1,Block:\"minecraft:activator_rail\",Passengers:[{id:\"commandblock_minecart\",Command:\"blockdata ~ ~-2 ~ {auto:0b,Command:\\\"\\\"}\"},\n";
+            string temp = "{id:\"commandblock_minecart\",Command:\"";
             string[] Code = code.Split('\n');
-            //StringBuilder gg = new StringBuilder();
-            //gg.Append("");
             StringBuilder[] cmd = new StringBuilder[code.Length / 10000 + 1];
             for (int i = 0; i < cmd.Length; ++i)
             {
                 cmd[i] = new StringBuilder();
-                cmd[i].Append("");
             }
             cmd[0].Append(cmdh);
             for (int i = 0; i < Code.Length; ++i)
@@ -40,15 +40,20 @@ namespace Mini_PCB
                 {
                     Code[i] = Code[i].Remove(Code[i].Length - 1);
                 }
-                cmd[index].AppendFormat("{0}{1}{2}", temp, Code[i], "},\n");
+                //cmd[index].AppendFormat("{0}{1}{2}", temp, Code[i], "},\n");
+                cmd[index].AppendFormat("{0}{1}{2}", temp, Code[i], "\"},\n");
+
                 if (cmd[index].Length > 30000)
                 {
-                    cmd[index].Append("{id:commandblock_minecart,Command:setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:fill ~ ~ ~ ~ ~-2 ~ air}},{id:commandblock_minecart,Command:kill @e[type=commandblock_minecart,r=1]}]}]}");
+                    //cmd[index].Append("{id:commandblock_minecart,Command:setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:fill ~ ~ ~ ~ ~-2 ~ air}},{id:commandblock_minecart,Command:kill @e[type=commandblock_minecart,r=1]}]}]}");
+
+                    cmd[index].Append("{id:\"commandblock_minecart\",Command:\"setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:\\\"fill ~ ~ ~ ~ ~-2 ~ air\\\"}\"},{id:\"commandblock_minecart\",Command:\"kill @e[type=commandblock_minecart,r=1]\"}]}]}");
                     index++;
                     cmd[index].Append(cmdh);
                 }
             }
-            cmd[index].Append("{id:commandblock_minecart,Command:setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:fill ~ ~ ~ ~ ~-2 ~ air}},{id:commandblock_minecart,Command:kill @e[type=commandblock_minecart,r=1]}]}]}");
+            cmd[index].Append("{id:\"commandblock_minecart\",Command:\"setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:\\\"fill ~ ~ ~ ~ ~-2 ~ air\\\"}\"},{id:\"commandblock_minecart\",Command:\"kill @e[type=commandblock_minecart,r=1]\"}]}]}");
+            //cmd[index].Append("{id:commandblock_minecart,Command:setblock ~ ~1 ~ command_block 0 replace {auto:1b,Command:fill ~ ~ ~ ~ ~-2 ~ air}},{id:commandblock_minecart,Command:kill @e[type=commandblock_minecart,r=1]}]}]}");
             string[] re = new string[cmd.Length];
             int strptr = 0;
             foreach (StringBuilder cmds in cmd) {
@@ -61,11 +66,12 @@ namespace Mini_PCB
         {
             show_form(Mini_PCB.Code_to_Cmd.Change_Code(ref code));
         }
+
         static void show_form(string[] code)
         {
             Mincraft_Command.OOC OOC = null;
             code_to_show.Code = code;
-            
+
             if (OOC == null || OOC.IsDisposed)
             {
                 OOC = new Mincraft_Command.OOC();
@@ -76,7 +82,6 @@ namespace Mini_PCB
                 OOC.Activate();
             }
         }
-
 
         private static void Cmd_KeyDown(object sender, KeyEventArgs e)
         {

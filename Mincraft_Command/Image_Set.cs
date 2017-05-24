@@ -6,14 +6,12 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Numerics;
 
 namespace Mincraft_Command
 {
     public class Image_Set
     {
-        Hashtable ChunkMark = new Hashtable();
-        int tags = 0;
-
         private static string code_gene(bool x, bool z, bool level, int head, int end, int i, int center_x, int center_y, int center_z, int m1tag, int m2tag, string block, ref BitmapData data)
         {
             if (level)
@@ -250,10 +248,17 @@ namespace Mincraft_Command
             //return files[min_i, 0];
         }
 
+        //static int diss(int x1, int y1, int z1, int x2, int y2, int z2)
+        //{
+        //    int dist;
+        //    dist = Math.Abs(x1 - x2) + Math.Abs(y1 - y2) + Math.Abs(z1 - z2);
+        //    return dist;
+        //}
+
         static int diss(int x1, int y1, int z1, int x2, int y2, int z2)
         {
             int dist;
-            dist = Math.Abs(x1 - x2) + Math.Abs(y1 - y2) + Math.Abs(z1 - z2);
+            dist = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2);
             return dist;
         }
 
