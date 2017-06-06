@@ -64,5 +64,18 @@ namespace Mincraft_Command
             }
 
         }
+        Help_Tools Help_Tools1 = null;
+        private void help_tool_Click(object sender, EventArgs e)
+        {
+            if (Help_Tools1 == null || Help_Tools1.IsDisposed)
+            {
+                Help_Tools1 = new Mincraft_Command.Help_Tools();
+                Help_Tools1.Show();
+            }
+            else
+            {
+                Help_Tools1.Activate();
+            }
+        }
     }
 }

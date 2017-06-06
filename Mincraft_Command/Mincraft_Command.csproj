@@ -56,6 +56,12 @@
       <DependentUpon>geometry.cs</DependentUpon>
     </Compile>
     <Compile Include="Geometry_Set.cs" />
+    <Compile Include="Help_Tools.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Help_Tools.Designer.cs">
+      <DependentUpon>Help_Tools.cs</DependentUpon>
+    </Compile>
     <Compile Include="Image_Model_set.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +98,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="geometry.resx">
       <DependentUpon>geometry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Help_Tools.resx">
+      <DependentUpon>Help_Tools.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Image_Model_set.resx">
       <DependentUpon>Image_Model_set.cs</DependentUpon>
@@ -136,6 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5CQ2AMKPYORU%254_3KZ%4017K0.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

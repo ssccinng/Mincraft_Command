@@ -89,5 +89,15 @@ namespace Mincraft_Command.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap _5CQ2AMKPYORU_4_3KZ_17K0 {
+            get {
+                object obj = ResourceManager.GetObject("5CQ2AMKPYORU%4_3KZ@17K0", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

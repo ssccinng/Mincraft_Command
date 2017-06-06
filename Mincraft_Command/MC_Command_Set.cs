@@ -24,7 +24,7 @@ namespace Mincraft_Command
         public static string fill_cmd(int x1, int y1, int z1, int x2, int y2, int z2, string block)
         {
             StringBuilder code = new StringBuilder();
-            int lims = Math.Abs((y1 - y2) * (z1 - z2));
+            int lims = (Math.Abs((y1 - y2)) + 1) * Math.Abs(((z1 - z2) + 1));
             if (lims > 32700)
             {
                 code.Append(fill_cmd(x1, y1, z1, x2, y2, (z1 + z2) / 2, block));
@@ -54,12 +54,23 @@ namespace Mincraft_Command
 
         private static void chunk_area(int x, int z, int len, int width, ref int start_x, ref int start_z)
         {
+            int tagx = 0, tagz = 0;
+            if (x < 0 && x % 16 != 0)
+            {
+                tagx = -1;
+            }
+            if (z < 0 && z % 16 != 0)
+            {
+                tagz = -1;
+            }
             x /= 16;
+            x += tagx;
             x *= 16;
             z /= 16;
+            z += tagz;
             z *= 16;
-            start_x = x - (len + 1) / 2 * 16;
-            start_z = z - (width + 1) / 2 * 16;
+            start_x = x - (len) / 2 * 16;
+            start_z = z - (width) / 2 * 16;
         }
 
         public static void chunk_cmd(int x, int y, int z, int len, int width, int height, string block1, string block2)
@@ -74,12 +85,12 @@ namespace Mincraft_Command
                     if ((i + j) % 2 == 0)
                     {
                         code.AppendFormat("fill {0} {1} {2} {3} {4} {5} {6}\n", start_x + i * 16, y, start_z + j * 16,
-                            start_x + i * 16 + 16, y + height - 1, start_z + j * 16 + 16, block1);
+                            start_x + i * 16 + 15, y + height - 1, start_z + j * 16 + 15, block1);
                     }
                     else
                     {
                         code.AppendFormat("fill {0} {1} {2} {3} {4} {5} {6}\n", start_x + i * 16, y, start_z + j * 16,
-                            start_x + i * 16 + 16, y + height - 1, start_z + j * 16 + 16, block2);
+                            start_x + i * 16 + 15, y + height - 1, start_z + j * 16 + 15, block2);
                     }
                 }
             }
@@ -90,7 +101,7 @@ namespace Mincraft_Command
         {
             int start_x = 0, start_z = 0;
             chunk_area(x, z, len, width, ref start_x, ref start_z);
-            Allfill_cmd(start_x, di, start_z, start_x + 16 * len, top, start_z + 16 * width, "air");
+            Allfill_cmd(start_x, di, start_z, start_x + 16 * len - 1, top, start_z + 16 * width - 1, "air");
         }
     }
 }
